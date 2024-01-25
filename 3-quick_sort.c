@@ -1,76 +1,88 @@
 #include "sort.h"
 
-/*prototypes. funcs() defined later in this file*/
-void sort_alg(int *arr, int left, int right, size_t size);
-int split(int *arr, int left, int right, size_t size);
-
 /**
-  * quick_sort - quicksort algorithm
-  * @array: array to be sorted
-  * @size: size of array
-  */
-void quick_sort(int *array, size_t size)
+ * myswap - swaps two values
+ *
+ * @array: data sort input
+ * @firts: first
+ * @second: second
+ * @size: size
+ *
+ * Return: No Return
+ */
+void myswap(int *array, int firts, int second, int size)
 {
-	if (array == NULL || size <= 1)
-		return;
-	sort_alg(array, 0, size - 1, size);
-}
+	int tmp;
 
-/**
-  * sort_alg - recursive sorting algorithm
-  * @arr: array
-  * @left: leftmost index
-  * @right: rightmost index
-  * @size: full size of array
-  */
-void sort_alg(int *arr, int left, int right, size_t size)
-{
-	int pivot;
-
-	if (left < right)
+	if (array[firts] != array[second])
 	{
-		pivot = split(arr, left, right, size);
-		sort_alg(arr, left, pivot - 1, size);
-		sort_alg(arr, pivot + 1, right, size);
+		tmp = array[firts];
+		array[firts] = array[second];
+		array[second] = tmp;
+		print_array(array, size);
 	}
 }
 
 /**
-  * split - split array
-  * @arr: array
-  * @left: leftmost index
-  * @right: rightmost index
-  * @size: full array size
-  * Return: pivot index
-  */
-int split(int *arr, int left, int right, size_t size)
+ * part - part to a pivot
+ *
+ * @array: data sort input
+ * @left: left
+ * @right: right
+ * @size: size input
+ *
+ * Return: New pivote
+ */
+int part(int *array, int left, int right, size_t size)
 {
-	int i, i2, pivot, tmp;
+	int i = left, j, pivot  = array[right];
 
-	pivot = arr[right];
-	i = left;
-
-	for (i2 = left; i2 < right; i2++)
+	for (j = left; j <= right; j++)
 	{
-		if (arr[i2] < pivot)
+		if (array[j] < pivot)
 		{
-			if (i != i2)
-			{
-				tmp = arr[i2];
-				arr[i2] = arr[i];
-				arr[i] = tmp;
-				print_array(arr, size);
-			}
+			myswap(array, i, j, size);
 			i++;
 		}
 	}
-	if (arr[i] != arr[right])
-	{
-		tmp = arr[i];
-		arr[i] = arr[right];
-		arr[right] = tmp;
-		print_array(arr, size);
-	}
+	myswap(array, i, right, size);
 
 	return (i);
+}
+
+/**
+ * myquicksort -  quick sort algorithm
+ *
+ * @array: data to sort
+ * @left: left pivote
+ * @right: right pivote
+ * @size: size input
+ * Return: No Return
+ */
+void myquicksort(int *array, int left, int right, size_t size)
+{
+	int pivote;
+
+	if (left < right)
+	{
+		pivote = part(array, left, right, size);
+		myquicksort(array, left, pivote - 1, size);
+		myquicksort(array, pivote + 1, right, size);
+	}
+}
+
+/**
+ * quick_sort -  quick sort algorithm
+ *
+ * @array: sort data
+ * @size: size input
+ *
+ * Return: No Return
+ */
+void quick_sort(int *array, size_t size)
+{
+	if (size < 2)
+		return;
+
+	myquicksort(array, 0, size - 1, size);
 }
